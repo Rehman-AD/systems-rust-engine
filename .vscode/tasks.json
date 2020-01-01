@@ -1,0 +1,26 @@
+// See https://go.microsoft.com/fwlink/?LinkId=733558
+// for the documentation about the tasks.json format
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Build Extension",
+      "group": "build",
+      "type": "npm",
+      "script": "watch",
+      "path": "editors/code/",
+      "problemMatcher": {
+        "base": "$tsc-watch",
+        "fileLocation": ["relative", "${workspaceFolder}/editors/code/"]
+      },
+      "isBackground": true,
+    },
+    {
+      "label": "Build Server",
+      "group": "build",
+      "type": "shell",
+      "command": "cargo build --package ra_lsp_server",
+      "problemMatcher": "$rustc"
+    },
+  ]
+}

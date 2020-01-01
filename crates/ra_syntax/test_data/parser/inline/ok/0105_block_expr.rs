@@ -1,0 +1,5 @@
+fn foo() {
+    {};
+    unsafe {};
+    'label: {};
+}
