@@ -63,7 +63,7 @@ MappedRustDiagnostic {
     },
     fixes: [
         CodeAction {
-            title: "consider passing by value instead: \'self\'",
+            title: "consider passing by value instead",
             kind: Some(
                 "quickfix",
             ),
