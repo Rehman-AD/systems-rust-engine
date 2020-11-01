@@ -37,8 +37,7 @@ impl<'a> ConstRender<'a> {
     }
 
     fn name(&self) -> Option<String> {
-        let ast_node = self.const_.source(self.ctx.db()).value;
-        ast_node.name().map(|name| name.text().to_string())
+        self.ast_node.name().map(|name| name.text().to_string())
     }
 
     fn detail(&self) -> String {
