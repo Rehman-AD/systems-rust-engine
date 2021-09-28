@@ -2,38 +2,12 @@ use ide_db::{
     assists::{AssistId, AssistKind},
     base_db::AnchoredPathBuf,
 };
-use syntax::{
-    ast::{self, Whitespace},
-    AstNode, AstToken, SourceFile, TextRange, TextSize,
+use syntax::{ast, AstNode};
+
+use crate::{
+    assist_context::{AssistContext, Assists},
+    utils::trimmed_text_range,
 };
-
-use crate::assist_context::{AssistContext, Assists};
-
-/// Trim(remove leading and trailing whitespace) `initial_range` in `source_file`, return the trimmed range.
-fn trimmed_text_range(source_file: &SourceFile, initial_range: TextRange) -> TextRange {
-    let mut trimmed_range = initial_range;
-    while source_file
-        .syntax()
-        .token_at_offset(trimmed_range.start())
-        .find_map(Whitespace::cast)
-        .is_some()
-        && trimmed_range.start() < trimmed_range.end()
-    {
-        let start = trimmed_range.start() + TextSize::from(1);
-        trimmed_range = TextRange::new(start, trimmed_range.end());
-    }
-    while source_file
-        .syntax()
-        .token_at_offset(trimmed_range.end())
-        .find_map(Whitespace::cast)
-        .is_some()
-        && trimmed_range.start() < trimmed_range.end()
-    {
-        let end = trimmed_range.end() - TextSize::from(1);
-        trimmed_range = TextRange::new(trimmed_range.start(), end);
-    }
-    trimmed_range
-}
 
 // Assist: move_to_mod_rs
 //
@@ -64,16 +38,13 @@ pub(crate) fn move_to_mod_rs(acc: &mut Assists, ctx: &AssistContext) -> Option<(
         return None;
     }
 
-    let target = TextRange::new(
-        source_file.syntax().text_range().start(),
-        source_file.syntax().text_range().end(),
-    );
+    let target = source_file.syntax().text_range();
     let module_name = module.name(ctx.db())?.to_string();
     let path = format!("./{}/mod.rs", module_name);
     let dst = AnchoredPathBuf { anchor: ctx.frange.file_id, path };
     acc.add(
         AssistId("move_to_mod_rs", AssistKind::Refactor),
-        format!("Turn {}.rs to {}/mod.rs", module_name, module_name),
+        format!("Convert {}.rs to {}/mod.rs", module_name, module_name),
         target,
         |builder| {
             builder.move_file(ctx.frange.file_id, dst);
