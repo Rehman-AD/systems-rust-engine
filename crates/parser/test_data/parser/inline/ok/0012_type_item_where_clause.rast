@@ -5,6 +5,12 @@ SOURCE_FILE
     NAME
       IDENT "Foo"
     WHITESPACE " "
+    EQ "="
+    WHITESPACE " "
+    TUPLE_TYPE
+      L_PAREN "("
+      R_PAREN ")"
+    WHITESPACE " "
     WHERE_CLAUSE
       WHERE_KW "where"
       WHITESPACE " "
@@ -23,11 +29,5 @@ SOURCE_FILE
                 PATH_SEGMENT
                   NAME_REF
                     IDENT "Copy"
-    WHITESPACE " "
-    EQ "="
-    WHITESPACE " "
-    TUPLE_TYPE
-      L_PAREN "("
-      R_PAREN ")"
     SEMICOLON ";"
   WHITESPACE "\n"
